@@ -58,11 +58,6 @@ public class CourseController {
         return this.crsCatalog.findCoursesByTitleContaining(title);
     }
 
-    @GetMapping(path = "search")
-    public Mono<Search> getSearch(){
-        return Mono.just(Search.builder().term("sample value").build());
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity submitNewCourse(@RequestBody Course nueCourse){
 
