@@ -6,9 +6,13 @@ import com.roi.demos.wfproject.persistence.PeopleDataSvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class PersonHandler {
@@ -25,22 +29,25 @@ public class PersonHandler {
 
     public Mono<ServerResponse> addPerson(ServerRequest request){
         Mono<Person> p = request.bodyToMono(Person.class);
-        this.dataSvc.addPerson(p.block());
-        return ServerResponse.accepted().contentType(MediaType.APPLICATION_JSON)
-                .body(p,Person.class);
+        return p.flatMap(np -> ServerResponse.accepted().contentType(MediaType.APPLICATION_JSON)
+                        .body(dataSvc.addPerson(np),Person.class));
     }
 
     public Mono<ServerResponse> getPersonByEmail(ServerRequest request){
-        Mono<Search> searchMono = request.bodyToMono(Search.class);
-        return ServerResponse.status(HttpStatus.FOUND).contentType(MediaType.APPLICATION_JSON)
-                .body(this.dataSvc.findByEmailAddress(searchMono.block().getTerm())
-                ,Person.class);
+       Mono<Search> seek = request.bodyToMono(Search.class);
+       return seek.flatMap(s->
+           ServerResponse.status(HttpStatus.FOUND).contentType(MediaType.APPLICATION_JSON)
+           .body(this.dataSvc.findByEmailAddress(s.getTerm()),Person.class)
+                   .switchIfEmpty(ServerResponse.notFound().build())
+       );
     }
 
     public Mono<ServerResponse> getPersonByPhone(ServerRequest request){
-        Mono<Search> searchMono = request.bodyToMono(Search.class);
-        return ServerResponse.status(HttpStatus.FOUND).contentType(MediaType.APPLICATION_JSON)
-                .body(this.dataSvc.findByPhone(searchMono.block().getTerm())
-                        ,Person.class);
+        Mono<Search> seek = request.bodyToMono(Search.class);
+        return seek.flatMap(s->
+                ServerResponse.status(HttpStatus.FOUND).contentType(MediaType.APPLICATION_JSON)
+                        .body(this.dataSvc.findByPhone(s.getTerm()),Person.class)
+                        .switchIfEmpty(ServerResponse.notFound().build())
+        );
     }
 }

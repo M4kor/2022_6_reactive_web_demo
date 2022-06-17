@@ -10,7 +10,7 @@ public interface PeopleDataSvc {
     Flux<Person> findAll();
     Mono<Person> findByEmailAddress(String email);
     Mono<Person> findByPhone(String phone);
-    void addPerson(Person peep);
-    void addGroup(List<Person> people);
+    Mono<Person> addPerson(Person peep);
+    Flux<Person> addGroup(List<Person> people);
 
 }

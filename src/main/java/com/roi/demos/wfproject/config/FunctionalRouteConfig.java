@@ -24,11 +24,11 @@ public class FunctionalRouteConfig {
                 .GET("",corpEvents::getCurrentEvents)
                 .POST("",corpEvents::createNewEvent)
                 .POST("group",corpEvents::createEvents)))
-                .path("person", n -> n.nest( accept(MediaType.APPLICATION_JSON).and(contentType(MediaType.APPLICATION_JSON)),
-                p->p.GET("",people::getPeoples)
-                .POST("",people::addPerson)
-                .POST("email",people::getPersonByEmail)
-                .POST("phone",people::getPersonByPhone)))
+                .path("person", n -> n.nest( accept(MediaType.APPLICATION_JSON),
+                p->p.POST("email",people::getPersonByEmail)
+                .POST("phone",people::getPersonByPhone)
+                .GET("",people::getPeoples)
+                .POST("",people::addPerson)))
                 .build();
     }
 }

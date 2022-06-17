@@ -2,6 +2,7 @@ package com.roi.demos.wfproject.endpoints;
 
 import com.roi.demos.wfproject.domain.Course;
 import com.roi.demos.wfproject.domain.RequestError;
+import com.roi.demos.wfproject.domain.Search;
 import com.roi.demos.wfproject.service.CourseManagementSvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -57,6 +58,11 @@ public class CourseController {
         return this.crsCatalog.findCoursesByTitleContaining(title);
     }
 
+    @GetMapping(path = "search")
+    public Mono<Search> getSearch(){
+        return Mono.just(Search.builder().term("sample value").build());
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity submitNewCourse(@RequestBody Course nueCourse){
 
@@ -67,5 +73,6 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.CREATED)
                         .body(nueCourse);
     }
+
 
 }

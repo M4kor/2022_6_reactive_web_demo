@@ -35,8 +35,9 @@ public class FauxCompanyEventsImpl implements CorpEventsDataSvc {
     }
 
     @Override
-    public void addEvents(List<CompanyEvent> nueEvents) {
+    public Flux<CompanyEvent> addEvents(List<CompanyEvent> nueEvents) {
         this.events.addAll(nueEvents);
+        return Flux.fromIterable(nueEvents);
     }
 
     @Override

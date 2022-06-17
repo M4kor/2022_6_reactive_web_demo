@@ -11,7 +11,7 @@ public interface CorpEventsDataSvc {
     Flux<CompanyEvent> getCurrentEvents();
     Flux<CompanyEvent> getEventsByLocation(String locale);
     Mono<CompanyEvent> addEvent(CompanyEvent nueEvent);
-    void addEvents(List<CompanyEvent> nueEvents);
+    Flux<CompanyEvent> addEvents(List<CompanyEvent> nueEvents);
     Flux<CompanyEvent> getEventsByDuration(int duration);
 
 }

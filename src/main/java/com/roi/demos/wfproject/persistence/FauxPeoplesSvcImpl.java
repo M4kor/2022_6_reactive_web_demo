@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FauxPeoplesSvcImpl implements PeopleDataSvc{
@@ -24,7 +25,9 @@ public class FauxPeoplesSvcImpl implements PeopleDataSvc{
 
     @Override
     public Mono<Person> findByEmailAddress(String email) {
-        return Mono.justOrEmpty(this.peoples.stream().filter(p->p.getEmailAddress().equalsIgnoreCase(email)).findFirst());
+        return Mono.justOrEmpty(this.peoples.stream()
+                .filter(p->p.getEmailAddress().equalsIgnoreCase(email))
+                .findFirst());
     }
 
     @Override
@@ -33,12 +36,14 @@ public class FauxPeoplesSvcImpl implements PeopleDataSvc{
     }
 
     @Override
-    public void addPerson(Person peep) {
+    public Mono<Person> addPerson(Person peep) {
         this.peoples.add(peep);
+        return Mono.just(peep);
     }
 
     @Override
-    public void addGroup(List<Person> people) {
+    public Flux<Person> addGroup(List<Person> people) {
         this.peoples.addAll(people);
+        return Flux.fromIterable(people);
     }
 }

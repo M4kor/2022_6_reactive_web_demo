@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Component
 public class CompanyEventHandler {
@@ -46,11 +47,8 @@ public class CompanyEventHandler {
                 .flatMap(dataSvc::addEvent),CompanyEvent.class);
     }
     public Mono<ServerResponse> createEvents(ServerRequest request){
-        ArrayList<CompanyEvent> rtn = new ArrayList<CompanyEvent>();
-        request.bodyToFlux(CompanyEvent.class)
-        .subscribe(e->{this.dataSvc.addEvent(e); rtn.add(e);});
-
+        Flux<CompanyEvent> events = request.bodyToFlux(CompanyEvent.class);
         return ServerResponse.accepted().contentType(MediaType.APPLICATION_JSON)
-        .body(Flux.fromIterable(rtn),CompanyEvent.class);
+        .body(dataSvc.addEvents(events.toStream().collect(Collectors.toList())),CompanyEvent.class);
     }
 }
