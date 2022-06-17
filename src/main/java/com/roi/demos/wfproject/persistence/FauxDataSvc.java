@@ -34,7 +34,7 @@ public class FauxDataSvc implements CourseDataService {
     }
 
     @Override
-    public Flux<Course> findCourseByTitleContianing(String phrase){
+    public Flux<Course> findCourseByTitleContaining(String phrase){
         return Flux.fromStream(
         crsList.stream().filter(course -> course.getCatalogTitle().contains(phrase)));
     }

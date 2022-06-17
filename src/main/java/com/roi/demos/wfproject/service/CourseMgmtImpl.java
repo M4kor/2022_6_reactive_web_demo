@@ -24,6 +24,9 @@ public class CourseMgmtImpl implements CourseManagementSvc{
 
     @Override
     public Mono<Course> findCourseByTitle(String title) {
+        if (title.contains("svcfaux")){
+            throw new IllegalArgumentException("illegal title characters");
+        }
         return crsData.findCourseByTitle(title);
     }
 
@@ -39,6 +42,6 @@ public class CourseMgmtImpl implements CourseManagementSvc{
 
     @Override
     public Flux<Course> findCoursesByTitleContaining(String phrase) {
-        return this.crsData.findCourseByTitleContianing(phrase);
+        return this.crsData.findCourseByTitleContaining(phrase);
     }
 }

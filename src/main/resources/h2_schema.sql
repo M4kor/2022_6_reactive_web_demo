@@ -1,0 +1,6 @@
+DROP TABLE corpevents IF EXISTS;
+DROP TABLE person IF EXISTS;
+
+CREATE TABLE IF NOT EXISTS corpevents (id uuid PRIMARY KEY , eventTitle VARCHAR(100) NOT NULL , location VARCHAR(50) NOT NULL , duration INT);
+
+CREATE TABLE IF NOT EXISTS person (id uuid PRIMARY KEY, firstName VARCHAR(50) NOT NULL, lastName VARCHAR(50) NOT NULL, emailAddress VARCHAR(50) NOT NULL, phone VARCHAR(50) NOT NULL);

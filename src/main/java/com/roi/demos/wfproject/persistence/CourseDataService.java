@@ -13,6 +13,6 @@ public interface CourseDataService {
 
     void saveAll(List<Course> nueCourses);
 
-    Flux<Course> findCourseByTitleContianing(String phrase);
+    Flux<Course> findCourseByTitleContaining(String phrase);
     Mono<Course> findCourseByTitle(String title);
 }
