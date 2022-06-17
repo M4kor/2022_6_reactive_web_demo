@@ -35,7 +35,6 @@ import static org.mockito.Mockito.mock;
 import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 //@AutoConfigureWebTestClient(timeout = "50000")
 class CourseControllerTest {
 
@@ -48,6 +47,8 @@ class CourseControllerTest {
     @BeforeEach
     void setUp() {
         crsMockSvc  = mock(CourseManagementSvc.class);
+
+
         client = WebTestClient.bindToApplicationContext(ctx).build();
 
 
@@ -88,13 +89,7 @@ class CourseControllerTest {
         client = null;
     }
 
-    @Test
-    void demoMockitoMock(){
-        crsMockSvc.save(Course.builder().id(UUID.randomUUID())
-                .description("the quick brown fox jumps over the lazy dog")
-                .build()
-        );
-    }
+
     @Test
     void getCurrentCourses() {
         WebTestClient wt = WebTestClient.bindToController(new CourseController(crsMockSvc))
@@ -106,53 +101,21 @@ class CourseControllerTest {
     }
 
     @Test
-    void getCurrentCoursesNDStream() {
-    }
-
-    @Test
-    void getCurrentCoursesStream() {
-        ParameterizedTypeReference<ServerSentEvent<Course>> rtnType
-                = new ParameterizedTypeReference<ServerSentEvent<Course>>() {};
-
-        client.get().uri("/course/txt-stream")
-                .accept(MediaType.TEXT_EVENT_STREAM)
-                .exchange()
-                .expectStatus().is2xxSuccessful()
-                .returnResult(Course.class)
-                .getResponseBody()
-                .parallel(8)
-                .runOn(Schedulers.parallel())
-                .subscribe(System.out::println);
-    }
-
-    @Test
-    void testGetCurrentCourses() {
-    }
-
-    @Test
-    void testGetCurrentCoursesNDStream() {
-    }
-
-    @Test
-    void testGetCurrentCoursesStream() {
-    }
-
-    @Test
     void findCourseByTitle() {
-        client.get().uri("/course/mytitle")
+        client.get().uri("/course/luctus rutrum nulla tellus in sagittis dui vel nisl")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Course.class)
                 .value(c->{
-                    assertAll("course inspection",
-                            ()->{});
+                    assertNotNull(c, "failed to find course");
                 });
 
     }
 
     @Test
     void findCoursesByTopic() {
+
     }
 
     @Test
